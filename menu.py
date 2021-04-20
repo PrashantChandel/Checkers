@@ -10,20 +10,21 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 def set_mode(value, difficulty):
     # upcoming feature
     pass
+GAME = Main(WIN)
 
 def start_the_game():
-	GAME = Main(WIN)
 	GAME.START_GAME()
     
-def do_nothing():
-	pass
 
 
-menu = pygame_menu.Menu(WIDTH, HEIGHT, 'CHECKERS', theme=pygame_menu.themes.THEME_BLUE)
+menu = pygame_menu.Menu(HEIGHT, WIDTH, 'CHECKERS', theme=pygame_menu.themes.THEME_BLUE)
+
+def quit_menu():
+    menu.close()
 
 menu.add.text_input('Name :', default='Ding_Dong_Dino')
 menu.add.button('Play', start_the_game)
 menu.add.selector('Mode:', [('1 Vs 1', 1), ('ONLINE', 2)], onchange=set_mode)
-menu.add.button('QUIT', do_nothing)
+menu.add.button('QUIT', quit_menu)
 
 menu.mainloop(WIN)
