@@ -47,7 +47,7 @@ class Main:
             clock.tick(self.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key==pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE:
                         status = self.Pause()
                         if(status == -1):
                             run = False
@@ -58,10 +58,5 @@ class Main:
                     row, col = self.get_row_col_from_mouse(pos)
                     game.select(row, col)
             game.update()
-        
-
-        # saving the current state
-        state_to_save = game.board
-        state_to_save.store_database()
 
         pygame.quit()

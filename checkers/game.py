@@ -1,7 +1,7 @@
 import pygame
 from .constants import BLUE, WHITE, BLACK, SQUARE_SIZE, DARK_BLUE
 from checkers.board import Board
-
+from checkers.data_handling import get_board, set_board, get_raw_board
 radius_allowed_moves = 15
 
 class Game:
@@ -17,7 +17,9 @@ class Game:
     def update(self):
         self.board.draw(self.win)
         self.draw_valid_moves(self.allowed_moves)
+        set_board(self.board.board)
         pygame.display.update()
+
 
     # reset the game
 
@@ -34,13 +36,6 @@ class Game:
         else:
             self.turn = BLUE
 
-    def winner(self):
-        if self.red_left <= 0:
-            return WHITE
-        elif self.white_left <= 0:
-            return RED
-
-        return None
 
     # recursive function to handle the move selected by player
     def select(self, row, col):

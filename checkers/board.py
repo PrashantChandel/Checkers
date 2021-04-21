@@ -2,28 +2,15 @@ from .piece import Piece
 import pygame
 import json
 from .constants import BLACK, ROWS, COLS, BLUE, SQUARE_SIZE, WHITE
+from checkers.data_handling import get_board, set_board
+
 class Board:
     def __init__(self):
-        self.board = []  #store this
-        self.red_left = self.white_left = 12
-        self.red_kings = self.white_kings = 0
-        self.create_board()
+        self.board = []
+        self.blue_left = self.black_left = 12
+        self.blue_kings = self.black_kings = 0
+        self.retreive_board()
      
-    def store_database(self):
-        state = open("resume.txt", "at")
-        for row in range(ROWS):
-            for cols in range(COLS):
-                state.write(str(self.board[row][cols]))
-                state.write("   ")
-            state.write("\n")
-        state.close()
-        # using json
-        json_current_state = json.dumps(str(self.board))
-        jfile = open("checkers/data.json", "at")
-        json.dump(json_current_state, jfile)
-
-        
-
     def draw_squares(self, win):
         win.fill(WHITE)
         for row in range(ROWS):
@@ -39,12 +26,16 @@ class Board:
 
         if row == ROWS - 1 or row == 0:
             piece.make_king()
-            if piece.color ==  WHITE:
-                self.white_kings += 1
+            if piece.color ==  BLACK:
+                self.black_kings += 1
             else:
-                self.red_kings += 1
+                self.blue_kings += 1
 
-
+    def retreive_board(self):
+        self.board = get_board()
+    
+    #currently no need of this below function but still may be
+    # helful if raw_board gets deleted from data.json
     def create_board(self):
         for row in range(ROWS):
             self.board.append([])
@@ -71,15 +62,15 @@ class Board:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
                 if piece.color == BLUE:
-                    self.red_left -= 1
+                    self.blue_left -= 1
                 elif piece.color == BLACK:
-                    self.white_left -= 1
+                    self.black_left -= 1
     
     def winner(self):
-        if self.red_kings <= 0:
+        if self.blue_left <= 0:
             return BLACK
-        elif self.white_kings <= 0:
-            return WHITE
+        elif self.black_left <= 0:
+            return BLUE
         return None
 
     
@@ -95,9 +86,6 @@ class Board:
             moves.update(self._traverse_left(row + 1, min(row + 3, ROWS), 1, piece.color, left))
             moves.update(self._traverse_right(row + 1, min(row + 3, ROWS), 1, piece.color, right))
         return moves        
-    
-    def check(self, r, c):
-        return (r >= 0 and c >= 0 and r < ROWS and c < COLS)
 
     def get_valid_moves(self, piece):
         moves = {}

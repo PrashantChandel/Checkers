@@ -2,7 +2,7 @@ import pygame
 from .constants import BLACK, SQUARE_SIZE, PIECE_BLACK, PIECE_BLUE, PADDING, CROWN, BLUE
 
 class Piece:
-	def __init__(self, row, col, color):
+	def __init__(self, row, col, color, king = False):
 		self.row = row
 		self.col = col
 		self.color = color
