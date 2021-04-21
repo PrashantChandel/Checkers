@@ -13,7 +13,8 @@ def set_mode(value, difficulty):
     # upcoming feature
     pass
 GAME = Main(WIN)
-
+def do_nothing():
+    pass
 def start_the_game():
 	GAME.START_GAME()
 

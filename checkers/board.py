@@ -1,5 +1,6 @@
 from .piece import Piece
 import pygame
+import json
 from .constants import BLACK, ROWS, COLS, BLUE, SQUARE_SIZE, WHITE
 class Board:
     def __init__(self):
@@ -16,6 +17,11 @@ class Board:
                 state.write("   ")
             state.write("\n")
         state.close()
+        # using json
+        json_current_state = json.dumps(str(self.board))
+        jfile = open("checkers/data.json", "at")
+        json.dump(json_current_state, jfile)
+
         
 
     def draw_squares(self, win):
