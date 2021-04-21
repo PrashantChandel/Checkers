@@ -5,12 +5,13 @@ from checkers.data_handling import get_board, set_board, get_raw_board
 radius_allowed_moves = 15
 
 class Game:
-    def __init__(self, win):
+    def __init__(self, win, voice = True):
         self.selected = None
-        self.board = Board()
+        self.board = Board(voice)
         self.turn = BLUE
         self.allowed_moves = {}
         self.win = win
+        self.voice = voice
  
     # everytime to change anything on baord we update it
 
