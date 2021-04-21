@@ -3,11 +3,21 @@ import pygame
 from .constants import BLACK, ROWS, COLS, BLUE, SQUARE_SIZE, WHITE
 class Board:
     def __init__(self):
-        self.board = []
+        self.board = []  #store this
         self.red_left = self.white_left = 12
         self.red_kings = self.white_kings = 0
         self.create_board()
      
+    def store_database(self):
+        state = open("resume.txt", "at")
+        for row in range(ROWS):
+            for cols in range(COLS):
+                state.write(str(self.board[row][cols]))
+                state.write("   ")
+            state.write("\n")
+        state.close()
+        
+
     def draw_squares(self, win):
         win.fill(WHITE)
         for row in range(ROWS):

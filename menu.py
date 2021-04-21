@@ -19,11 +19,10 @@ def do_nothing():
 	pass
 
 
-menu = pygame_menu.Menu(WIDTH, HEIGHT, 'CHECKERS', theme=pygame_menu.themes.THEME_BLUE)
+menu = pygame_menu.Menu(HEIGHT, WIDTH, 'CHECKERS', theme=pygame_menu.themes.THEME_BLUE)
 
 menu.add.text_input('Name :', default='Ding_Dong_Dino')
 menu.add.button('Play', start_the_game)
 menu.add.selector('Mode:', [('1 Vs 1', 1), ('ONLINE', 2)], onchange=set_mode)
 menu.add.button('QUIT', do_nothing)
-
 menu.mainloop(WIN)
