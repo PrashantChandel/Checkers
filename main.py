@@ -1,5 +1,5 @@
 import pygame   
-from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE
+from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE,WINNER,BLUE
 from checkers.board import Board
 from checkers.game import Game
 
@@ -75,6 +75,21 @@ class Main:
                         pause = 0
             pygame.display.update()
         return pause  
+    
+    def declare(self,winner):
+        if winner==BLACK:
+            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2))
+        elif winner==BLUE:
+            self.WIN.blit(WINNER,(HEIGHT+HEIGHT//2,WIDTH//2))
+        if winner!=None:
+            crash=1
+            while crash:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        crash =0
+                pygame.display.update()
+            return 0
+        return 1
 
     def START_GAME(self):
         run = True
@@ -83,6 +98,9 @@ class Main:
         self.menu_bar()
         while run:
             clock.tick(self.FPS)
+            check=self.declare(game.board.winner())
+            if check==0:
+                run=False
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
