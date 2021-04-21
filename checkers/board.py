@@ -12,7 +12,7 @@ class Board:
         self.retreive_board()
      
     def draw_squares(self, win):
-        win.fill(WHITE)
+        win.fill(WHITE, ((0,0),(800,800)))
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, BLACK, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))

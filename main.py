@@ -19,6 +19,38 @@ class Main:
         self.WIN = WIN
         self.FPS = 60
         self.pause_text = TEXT('GAME IS PAUSED! PRESS SPACE TO RESUME')
+    
+    def menu_bar(self):
+        self.WIN.fill((100,255,100), ((0,800),(800,1000)))
+        save_game_img = pygame.image.load("checkers/assets/savegame.png")
+        pause_img = pygame.image.load("checkers/assets/pause.png")
+        exit_img = pygame.image.load("checkers/assets/Exit.png")
+        
+        self.WIN.blit(save_game_img, (800,0))
+        self.WIN.blit(pause_img, (800,100))
+        self.WIN.blit(exit_img,(800,200))
+        pygame.display.update()
+    def menu_bar_condition(self,by, bx):
+        if(by<100):
+            # function for save game
+            print("save game")
+            run = True
+            return run
+            pass
+            
+        if(by>100 and by<200):
+            # function for pause game
+            print("pause")
+            status = self.Pause()
+            if(status == -1):
+                run = False
+            return True
+        if( by>200 and by<300):
+            #function for exit game
+            print("exit")
+            run = False
+            return run
+        
 
     def get_row_col_from_mouse(self, pos):
         x, y = pos
@@ -36,6 +68,11 @@ class Main:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         pause = 0
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    x, y = pos
+                    if(x>800 and y>100 and y<200):
+                        pause = 0
             pygame.display.update()
         return pause  
 
@@ -43,6 +80,7 @@ class Main:
         run = True
         clock = pygame.time.Clock()
         game = Game(self.WIN)
+        self.menu_bar()
         while run:
             clock.tick(self.FPS)
             for event in pygame.event.get():
@@ -56,7 +94,12 @@ class Main:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     row, col = self.get_row_col_from_mouse(pos)
-                    game.select(row, col)
+                    if(row<8 and col<8):
+                        game.select(row, col)
+                    else:
+                        bx, by = pos
+                        run = self.menu_bar_condition(by,bx)
+                        
             game.update()
 
         pygame.quit()
