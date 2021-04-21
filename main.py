@@ -39,10 +39,10 @@ class Main:
             pygame.display.update()
         return pause  
 
-    def START_GAME(self):
+    def START_GAME(self, voice = True):
         run = True
         clock = pygame.time.Clock()
-        game = Game(self.WIN)
+        game = Game(self.WIN, voice)
         while run:
             clock.tick(self.FPS)
             for event in pygame.event.get():

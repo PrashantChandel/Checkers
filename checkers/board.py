@@ -3,13 +3,17 @@ import pygame
 import json
 from .constants import BLACK, ROWS, COLS, BLUE, SQUARE_SIZE, WHITE
 from checkers.data_handling import get_board, set_board
+from checkers.sounds import Sounds
+
+sound = Sounds()
 
 class Board:
-    def __init__(self):
+    def __init__(self, voice = True):
         self.board = []
         self.blue_left = self.black_left = 12
         self.blue_kings = self.black_kings = 0
         self.retreive_board()
+        self.voice = voice
      
     def draw_squares(self, win):
         win.fill(WHITE)
@@ -23,9 +27,10 @@ class Board:
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
-
+        sound.make_jump_sound(self.voice)
         if row == ROWS - 1 or row == 0:
             piece.make_king()
+            sound.make_king_sound(self.voice)
             if piece.color ==  BLACK:
                 self.black_kings += 1
             else:
@@ -33,6 +38,24 @@ class Board:
 
     def retreive_board(self):
         self.board = get_board()
+        cntblue = cntblack = 0
+        blueking = blackking = 0
+        for row in self.board:
+            for cell in row:
+                if cell == 0:
+                    pass
+                elif cell.color == BLUE:
+                    cntblue += 1
+                    if cell.king:
+                        blueking += 1
+                elif cell.color == BLACK:
+                    cntblack += 1
+                    if cell.king:
+                        blackking += 1
+        self.black_left = cntblack
+        self.blue_left = cntblue
+        self.black_kings = blackking
+        self.blue_kings = blueking
     
     #currently no need of this below function but still may be
     # helful if raw_board gets deleted from data.json
