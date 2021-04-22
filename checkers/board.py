@@ -91,9 +91,9 @@ class Board:
     
     def winner(self):
         if self.blue_left <= 0:
-            return BLACK
+            return "black"
         elif self.black_left <= 0:
-            return BLUE
+            return "blue"
         return None
 
     

@@ -94,13 +94,13 @@ class Main:
         return pause  
     
     def declare(self,winner):
-        if winner==BLACK:
-            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2))
-        elif winner==BLUE:
-            self.WIN.blit(WINNER,(HEIGHT+HEIGHT//2,WIDTH//2))
+        if winner=="blue":
+            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+100))
+        elif winner=="black":
+            self.WIN.blit(WINNER,(HEIGHT+HEIGHT//2,WIDTH//2+100))
         if winner!=None:
             crash=1
-            while crash:
+            while crash>0:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         crash =0
