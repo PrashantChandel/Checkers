@@ -6,7 +6,7 @@ class Piece:
 		self.row = row
 		self.col = col
 		self.color = color
-		self.king = False
+		self.king = king
 		if self.color == BLUE:
 			self.direction = -1
 		else:

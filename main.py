@@ -9,7 +9,7 @@ class TEXT:
         font = pygame.font.Font('freesansbold.ttf', 25)
         self.text = font.render(show_me, True, BLACK, WHITE)
         self.textshow = self.text.get_rect()
-        self.textshow.center = (WIDTH//2, HEIGHT//2)
+        self.textshow.center = (WIDTH//2, HEIGHT//2 - SQUARE_SIZE)
     def show_text(self, WIN):
         WIN.blit(self.text,self.textshow)
 
@@ -60,3 +60,4 @@ class Main:
             game.update()
 
         pygame.quit()
+        return False

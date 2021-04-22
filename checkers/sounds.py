@@ -18,6 +18,6 @@ class Sounds:
         if voice:
             self.king_sound.play()
     def play_music(self, ID = 0):
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(-1)
     def stop_music(self, ID = 0):
         pygame.mixer.music.stop()
