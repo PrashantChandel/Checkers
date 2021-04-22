@@ -3,22 +3,39 @@ from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE
 from checkers.board import Board
 from checkers.game import Game
 
+
+
 class TEXT:
     def __init__(self, show_me):
         pygame.font.init()
         font = pygame.font.Font('freesansbold.ttf', 25)
         self.text = font.render(show_me, True, BLACK, WHITE)
+        self.text_manual = font.render(show_me, True, BLACK)
         self.textshow = self.text.get_rect()
         self.textshow.center = (WIDTH//2, HEIGHT//2)
     def show_text(self, WIN):
-        WIN.blit(self.text,self.textshow)
-
+        WIN.blit(self.text,self.textshow)  
+    def show_text_manual(self,WIN, x, y):
+        pos = x,y    
+        WIN.blit(self.text_manual, pos)
 
 class Main:
     def __init__(self, WIN):
         self.WIN = WIN
         self.FPS = 60
         self.pause_text = TEXT('GAME IS PAUSED! PRESS SPACE TO RESUME')
+    
+    def Score(self, game):
+        # white left: w
+        # blue left : b
+        b = game.board.blue_left
+        w = game.board.black_left
+        self.WIN.fill((254, 191, 195), ((800,500), (1000,800)))
+        b_l = TEXT('Blue left '+str(b))
+        w_l = TEXT('White left '+str(w))
+        b_l.show_text_manual(self.WIN,800, 500)
+        w_l.show_text_manual(self.WIN,800, 700)
+
     
     def menu_bar(self):
         self.WIN.fill((100,255,100), ((0,800),(800,1000)))
@@ -81,6 +98,7 @@ class Main:
         clock = pygame.time.Clock()
         game = Game(self.WIN)
         self.menu_bar()
+        
         while run:
             clock.tick(self.FPS)
             for event in pygame.event.get():
@@ -99,7 +117,8 @@ class Main:
                     else:
                         bx, by = pos
                         run = self.menu_bar_condition(by,bx)
-                        
+                      
             game.update()
+            self.Score(game)
 
         pygame.quit()
