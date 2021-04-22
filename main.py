@@ -108,12 +108,13 @@ class Main:
             return 0
         return 1
 
-    def START_GAME(self):
+    def START_GAME(self, voice = True):
         run = True
         clock = pygame.time.Clock()
-        game = Game(self.WIN)
+        game = Game(self.WIN, voice)
         self.menu_bar()
         
+
         while run:
             clock.tick(self.FPS)
             check=self.declare(game.board.winner())
