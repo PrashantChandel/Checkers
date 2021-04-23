@@ -1,4 +1,4 @@
-from os import sched_get_priority_max
+# from os import sched_get_priority_max
 import pygame
 import json
 from checkers.piece import Piece

@@ -14,9 +14,11 @@ class Board:
         self.blue_kings = self.black_kings = 0
         self.retreive_board()
         self.voice = voice
-     
+
+        self.visited = {}
+        self.moves = [[[1, 1], [1, -1], [-1, 1], [-1, -1]], [[1, -1], [1, 1]], [[-1, 1], [-1, -1]]]   
     def draw_squares(self, win):
-        win.fill(WHITE)
+        win.fill(WHITE, ((0,0),(800,800)))
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, BLACK, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
@@ -81,9 +83,10 @@ class Board:
                     piece.draw(win)
     
     def remove(self, pieces):
-        for piece in pieces:
-            self.board[piece.row][piece.col] = 0
+        for p in pieces:
+            piece=self.get_piece(p[0], p[1])
             if piece != 0:
+                self.board[piece.row][piece.col] = 0
                 if piece.color == BLUE:
                     self.blue_left -= 1
                 elif piece.color == BLACK:
@@ -91,95 +94,60 @@ class Board:
     
     def winner(self):
         if self.blue_left <= 0:
-            return BLACK
+            return "black"
         elif self.black_left <= 0:
-            return BLUE
+            return "blue"
         return None
 
     
-    def get_valid_moves(self, piece):
-        moves = {}
-        left = piece.col - 1
-        right = piece.col + 1
-        row = piece.row
-        if piece.color == BLUE or piece.king:
-            moves.update(self._traverse_left(row - 1, max(row - 3, -1), -1, piece.color, left))
-            moves.update(self._traverse_right(row - 1, max(row - 3, -1), -1, piece.color, right))
-        if piece.color == BLACK or piece.king:
-            moves.update(self._traverse_left(row + 1, min(row + 3, ROWS), 1, piece.color, left))
-            moves.update(self._traverse_right(row + 1, min(row + 3, ROWS), 1, piece.color, right))
-        return moves        
+    def isValid(self, x, y):
+        return x >=0 and y >=0 and x < ROWS and y < COLS   
 
     def get_valid_moves(self, piece):
-        moves = {}
-        left = piece.col - 1
-        right = piece.col + 1
-        row = piece.row
-        if piece.color == BLUE or piece.king:
-            moves.update(self._traverse_left(row - 1, max(row - 3, -1), -1, piece.color, left))
-            moves.update(self._traverse_right(row - 1, max(row - 3, -1), -1, piece.color, right))
-        if piece.color == BLACK or piece.king:
-            moves.update(self._traverse_left(row + 1, min(row + 3, ROWS), 1, piece.color, left))
-            moves.update(self._traverse_right(row + 1, min(row + 3, ROWS), 1, piece.color, right))
-        print(len(moves))
-        return moves        
-    
-    def _traverse_left(self, start, stop, step, color, left, skipped = []):
-        moves = {}
-        last = []
-        for r in range(start, stop, step):
-            if left < 0:
-                break
-            current = self.board[r][left]
-            if current == 0:
-                if skipped and not last:
-                    break
-                elif skipped:
-                    moves[(r, left)] = last + skipped
-                else:
-                    moves[(r, left)] = last
-                row = 0
-                if last:
-                    if step == -1:
-                        row = max(r - 3, 0)
-                    else:
-                        row = min(r + 3, ROWS)
-                    moves.update(self._traverse_left(r + step, row, step, color, left - 1, skipped = last))
-                    moves.update(self._traverse_right(r + step, row, step, color, left + 1, skipped = last))
-                break
-            elif current.color == color:
-                break
-            else:
-                last = [current]
-            left -= 1
-        return moves
+        x = piece.row
+        y = piece.col
+        nowPiece = self.get_piece(x, y)
+        d={}
 
-    def _traverse_right(self, start, stop, step, color, right, skipped = []):
-        moves = {}
-        last = []
-        for r in range(start, stop, step):
-            if right >= COLS:
-                break
-            current = self.board[r][right]
-            if current == 0:
-                if skipped and not last:
-                    break
-                elif skipped:
-                    moves[(r, right)] = last + skipped
-                else:
-                    moves[(r, right)] = last
-                row = 0
-                if last:
-                    if step == -1:
-                        row = max(r - 3, 0)
-                    else:
-                        row = min(r + 3, ROWS)
-                    moves.update(self._traverse_left(r + step, row, step, color, right - 1, skipped = last))
-                    moves.update(self._traverse_right(r + step, row, step, color, right + 1, skipped = last))
-                break
-            elif current.color == color:
-                break
-            else:
-                last = [current]
-            right += 1
-        return moves
+        typeOfPiece = 2
+        if self.get_piece(x, y).king:
+            typeOfPiece = 0
+        elif self.get_piece(x, y).color == BLACK:
+            typeOfPiece = 1
+
+        # double steps
+        for i in self.moves[typeOfPiece]:
+            if self.isValid(x + i[0], y + i[1]) and self.get_piece(x + i[0], y + i[1]) != 0 and self.get_piece(x + i[0], y + i[1]).color != nowPiece.color:
+                if self.isValid(x + 2 * i[0], y + 2 * i[1]) and self.get_piece(x + 2 * i[0], y + 2 * i[1]) == 0:
+                    self.visited = {}
+                    self.visited[(x, y)] = []
+                    d.update(self.find_allowed_moves(
+                        x + 2 * i[0], y + 2 * i[1], typeOfPiece,  self.get_piece(x, y).color, [[x + i[0], y + i[1]]]))
+
+        # single steps
+        for i in self.moves[typeOfPiece]:
+            if self.isValid(x + i[0], y + i[1]) and self.get_piece(x + i[0], y + i[1]) == 0:
+                d[(x+i[0], y+i[1])] = []
+
+        print(d)
+
+        return d
+
+    def find_allowed_moves(self, x, y, typeOfPiece, nowPiece, skipped_pieces):
+        print(x, y, skipped_pieces)
+        print('visited',self.visited)
+        d={}
+        d[(x, y)]=[]
+        #d[(x, y)]=skipped_pieces
+        if (x, y) in self.visited:
+            return self.visited[(x, y)]
+        for i in skipped_pieces:
+            d[(x, y)].append(i)
+        for i in self.moves[typeOfPiece]:
+            if self.isValid(x + i[0], y + i[1]) and self.get_piece(x + i[0], y + i[1]) != 0 and self.get_piece(x + i[0], y + i[1]).color != nowPiece:
+                if self.isValid(x + 2 * i[0], y + 2 * i[1]) and self.get_piece(x + 2 * i[0], y + 2 * i[1]) == 0:
+                    self.visited[(x, y )]=[]
+                    d.update(self.find_allowed_moves(x + 2 * i[0], y + 2 * i[1], typeOfPiece, nowPiece,skipped_pieces + [[x + i[0], y + i[1]]]))
+                    self.visited[(x, y)]=d
+        #print(d)
+        return d
