@@ -9,33 +9,37 @@ from checkers.sounds import Sounds
 
 
 
-class MENU:
-    def __init__(self):
+class Menu:
+    def __init__(self, WIN):
         pygame.init()
-        self.WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.WIN = WIN
         self.VOICE = True
         self.sound = Sounds()
         self.MAIN = Main(self.WIN)
-        self.VOICE = False
+        self.VOICE = True
+        self.ON = True
         self.menu = pygame_menu.Menu(HEIGHT, WIDTH, 'CHECKERS', theme = pygame_menu.themes.THEME_DARK)
         self.menu.add.text_input('NAME:', default = get_name(), onchange = set_name)
         self.menu.add.button('NEW GAME', self.start_the_game)
         self.menu.add.button('RESUME', self.resume_previous)
         self.menu.add.selector('Sound:', [('ON', True), ('OFF', False)], onchange = self.config_sound)
         self.menu.add.selector('Music:', [('OFF', False), ('ON', True)], onchange = self.config_music)
-
+        self.menu.add.button('EXIT', self.close)
     def config_sound(self, obj, value):
         self.VOICE = value
 
-        
+    def close(self):
+        self.menu.disable()
 
     def resume_previous(self):
         set_board(get_board())
-        self.MAIN.START_GAME(self.VOICE)
+        self.ON = False
+        # self.MAIN.START_GAME(self.VOICE)
 
     def start_the_game(self):
         set_board(get_raw_board())
-        self.MAIN.START_GAME(self.VOICE)
+        self.ON = False
+        # self.MAIN.START_GAME(self.VOICE)
 
     def config_music(self, obj, value):
         if value:
@@ -44,7 +48,15 @@ class MENU:
             self.sound.stop_music()
 
     def START(self):
-        self.menu.mainloop(self.WIN)
-
-
-MENU().START()
+        while True:
+            if(self.ON == False):
+                self.ON = True
+                return self.VOICE
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            if self.menu.is_enabled():
+                self.menu.update(events)
+                self.menu.draw(self.WIN)
+            pygame.display.update()

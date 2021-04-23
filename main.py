@@ -1,3 +1,4 @@
+from os import terminal_size
 import pygame   
 from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE
 from checkers.board import Board
@@ -16,6 +17,7 @@ class TEXT:
 
 class Main:
     def __init__(self, WIN):
+        self.ON = True
         self.WIN = WIN
         self.FPS = 60
         self.pause_text = TEXT('GAME IS PAUSED! PRESS SPACE TO RESUME')
@@ -38,8 +40,15 @@ class Main:
                         pause = 0
             pygame.display.update()
         return pause  
+    def ON(self):
+        self.ON = True
+    def OFF(self):
+        self.ON = False
 
     def START_GAME(self, voice = True):
+        if(self.ON == False):
+            self.ON = True
+            return False
         run = True
         clock = pygame.time.Clock()
         game = Game(self.WIN, voice)
@@ -48,9 +57,12 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        run = False
                         status = self.Pause()
                         if(status == -1):
                             run = False
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -58,6 +70,6 @@ class Main:
                     row, col = self.get_row_col_from_mouse(pos)
                     game.select(row, col)
             game.update()
-
-        pygame.quit()
+        # pygame.quit()
+        self.ON = True
         return False
