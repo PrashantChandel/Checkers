@@ -4,6 +4,9 @@ from main import Main
 from menu import Menu
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Checkers")
+icon = pygame.image.load("checkers/assets/checkers.png")
+pygame.display.set_icon(icon)
 FPS = 60
 
 def do():
