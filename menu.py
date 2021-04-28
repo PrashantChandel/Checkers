@@ -34,12 +34,10 @@ class Menu:
     def resume_previous(self):
         set_board(get_board())
         self.ON = False
-        # self.MAIN.START_GAME(self.VOICE)
 
     def start_the_game(self):
         set_board(get_raw_board())
         self.ON = False
-        # self.MAIN.START_GAME(self.VOICE)
 
     def config_music(self, obj, value):
         if value:

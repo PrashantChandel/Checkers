@@ -5,7 +5,7 @@ from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE,WINNER,BL
 from checkers.board import Board
 from checkers.game import Game
 
-
+COLOR_SIDE_MENU = (254, 191, 195),
 
 class TEXT:
     def __init__(self, show_me):
@@ -14,7 +14,7 @@ class TEXT:
         self.text = font.render(show_me, True, BLACK, WHITE)
         self.text_manual = font.render(show_me, True, BLACK)
         self.textshow = self.text.get_rect()
-        self.textshow.center = (WIDTH//2, HEIGHT//2 - SQUARE_SIZE)
+        self.textshow.center = (WIDTH//2 - SQUARE_SIZE, HEIGHT//2 - SQUARE_SIZE)
     def show_text(self, WIN):
         WIN.blit(self.text,self.textshow)  
     def show_text_manual(self,WIN, x, y):
@@ -33,9 +33,9 @@ class Main:
         # blue left : b
         b = game.board.blue_left
         w = game.board.black_left
-        self.WIN.fill((254, 191, 195), ((800,500), (1000,800)))
-        b_l = TEXT('Blue left '+str(b))
-        w_l = TEXT('White left '+str(w))
+        self.WIN.fill(COLOR_SIDE_MENU, ((800,500), (1000,800)))
+        b_l = TEXT('BLUE LEFT : ' + str(b))
+        w_l = TEXT('WHITE LEFT: ' + str(w))
         b_l.show_text_manual(self.WIN,800, 500)
         w_l.show_text_manual(self.WIN,800, 700)
 
@@ -59,7 +59,7 @@ class Main:
         return pause      
     def declare(self,winner):
         if winner=="blue":
-            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+WIDTH//8))
+            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+WIDTH//16))
             pygame.display.update()
             time.sleep(5)
             return 1
@@ -81,13 +81,12 @@ class Main:
         game = Game(self.WIN, voice)
         while run:
             clock.tick(self.FPS)
-            check=self.declare(game.board.winner())
-            if check==1:
-                run=False
+            check = self.declare(game.board.winner())
+            if check == 1:
+                run = False
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        run = False
                         status = self.Pause()
                         if(status == -1):
                             run = False
