@@ -66,18 +66,25 @@ class Main:
                         pause = 0
             pygame.display.update()
         return pause      
-    def declare(self,winner):
+    def declare(self, winner):
+        pause = -1
         if winner=="blue":
             self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+WIDTH//16))
-            return 1
-
+            pause = 1
         elif winner=="black":
             self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//16))
+            pause = 1
+        else:
+            return 0
+        while pause > 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pause = -1
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        pause = -1
             pygame.display.update()
-            time.sleep(2)
-            return 1
-            
-        return 0
+        return 1
 
     def START_GAME(self, voice = True):
         if(self.ON == False):
@@ -88,9 +95,6 @@ class Main:
         game = Game(self.WIN, voice)
         while run:
             clock.tick(self.FPS)
-            check = self.declare(game.board.winner())
-            if check == 1:
-                run = False
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -107,9 +111,12 @@ class Main:
                     if(row<8 and col<8):
                         game.select(row, col)
                     else:
-                        pass
-                      
+                        pass          
             game.update()
             self.Score(game)
+            check = self.declare(game.board.winner())
+            if check == 1:
+                run = False
+                break
         self.ON = True
         return False
