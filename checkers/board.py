@@ -31,8 +31,9 @@ class Board:
         piece.move(row, col)
         sound.make_jump_sound(self.voice)
         if row == ROWS - 1 or row == 0:
-            piece.make_king()
-            sound.make_king_sound(self.voice)
+            if not piece.king:
+                piece.make_king()
+                sound.make_king_sound(self.voice)
             if piece.color ==  BLACK:
                 self.black_kings += 1
             else:

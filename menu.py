@@ -4,7 +4,7 @@ from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT
 from checkers.board import Board
 from checkers.game import Game
 from main import Main
-from checkers.data_handling import get_raw_board, get_name, get_raw_board, set_name, get_board, set_board
+from checkers.data_handling import get_raw_board, get_name, get_raw_board, get_raw_turn, get_turn, set_name, get_board, set_board, set_turn
 from checkers.sounds import Sounds
 
 
@@ -33,10 +33,12 @@ class Menu:
 
     def resume_previous(self):
         set_board(get_board())
+        set_turn(get_turn())
         self.ON = False
 
     def start_the_game(self):
         set_board(get_raw_board())
+        set_turn(get_raw_turn())
         self.ON = False
 
     def config_music(self, obj, value):

@@ -1,14 +1,14 @@
 import pygame
 from .constants import BLUE, WHITE, BLACK, SQUARE_SIZE, DARK_BLUE
 from checkers.board import Board
-from checkers.data_handling import get_board, set_board, get_raw_board
+from checkers.data_handling import get_board, get_turn, set_board, get_raw_board, set_turn
 radius_allowed_moves = 15
 
 class Game:
     def __init__(self, win, voice = True):
         self.selected = None
         self.board = Board(voice)
-        self.turn = BLUE
+        self.turn = get_turn()
         self.allowed_moves = {}
         self.win = win
         self.voice = voice
@@ -19,6 +19,7 @@ class Game:
         self.board.draw(self.win)
         self.draw_valid_moves(self.allowed_moves)
         set_board(self.board.board)
+        set_turn(self.turn)
         pygame.display.update()
 
 

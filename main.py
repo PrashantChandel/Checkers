@@ -1,25 +1,27 @@
 from os import terminal_size
 import pygame  
 import time 
-from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE,WINNER,BLUE
+from checkers.constants import *
 from checkers.board import Board
 from checkers.game import Game
 
-COLOR_SIDE_MENU = (254, 191, 195),
+COLOR_SIDE_MENU = (254, 191, 195)
+FIRST_ROW = 700
+SECOND_ROW = 500
+THIRD_ROW = 300
 
 class TEXT:
-    def __init__(self, show_me):
+    def __init__(self, show_me, color = BLACK, bg = None):
         pygame.font.init()
         font = pygame.font.Font('freesansbold.ttf', 25)
-        self.text = font.render(show_me, True, BLACK, WHITE)
-        self.text_manual = font.render(show_me, True, BLACK)
+        self.text = font.render(show_me, True, color, bg)
         self.textshow = self.text.get_rect()
         self.textshow.center = (WIDTH//2 - SQUARE_SIZE, HEIGHT//2 - SQUARE_SIZE)
     def show_text(self, WIN):
         WIN.blit(self.text,self.textshow)  
     def show_text_manual(self,WIN, x, y):
         pos = x,y    
-        WIN.blit(self.text_manual, pos)
+        WIN.blit(self.text, pos)
 
 class Main:
     def __init__(self, WIN):
@@ -36,8 +38,15 @@ class Main:
         self.WIN.fill(COLOR_SIDE_MENU, ((800,500), (1000,800)))
         b_l = TEXT('BLUE LEFT : ' + str(b))
         w_l = TEXT('WHITE LEFT: ' + str(w))
-        b_l.show_text_manual(self.WIN,800, 500)
-        w_l.show_text_manual(self.WIN,800, 700)
+        b_l.show_text_manual(self.WIN,800, SECOND_ROW)
+        w_l.show_text_manual(self.WIN,800, FIRST_ROW)
+        if(game.board.winner() == "blue"):
+            winner = TEXT('BLUE WON !!', CYAN)
+            winner.show_text_manual(self.WIN, 810, THIRD_ROW)
+        elif(game.board.winner() == "black"):
+            winner = TEXT('BLACK WON !!', CYAN)
+            winner.show_text_manual(self.WIN, 810, THIRD_ROW)
+
 
     def get_row_col_from_mouse(self, pos):
         x, y = pos
@@ -60,14 +69,10 @@ class Main:
     def declare(self,winner):
         if winner=="blue":
             self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+WIDTH//16))
-            pygame.display.update()
-            time.sleep(5)
             return 1
 
         elif winner=="black":
             self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//16))
-            pygame.display.update()
-            time.sleep(5)
             return 1
             
         return 0
@@ -104,6 +109,5 @@ class Main:
                       
             game.update()
             self.Score(game)
-        # pygame.quit()
         self.ON = True
         return False

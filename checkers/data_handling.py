@@ -71,3 +71,29 @@ def get_board():
                     new_row.append(Piece(cell[0], cell[1], rgb_to_color(cell[2]), cell[3]))
             state_board.append(new_row)
         return state_board
+
+
+def set_turn(turn): #please give args in string format
+    data_dict = []
+    if(turn == BLUE):
+        turn = "BLUE"
+    else:
+        turn = "BLACK"
+    with open('checkers/data.json', 'r') as DB:
+        data_dict = json.loads(DB.read())
+    with open('checkers/data.json', 'w') as DB:
+        data_dict["Turn"] = turn
+        json.dump(data_dict, DB)
+
+def get_turn():
+    with open('checkers/data.json', 'r') as DB:
+        data_dict = json.loads(DB.read())
+        turn = data_dict["Turn"]
+        if(turn == "BLUE"):
+            return BLUE
+        else:
+            return BLACK
+
+
+def get_raw_turn():
+    return BLUE
