@@ -67,7 +67,7 @@ class Main:
         elif winner=="black":
             self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//16))
             pygame.display.update()
-            time.sleep(5)
+            time.sleep(2)
             return 1
             
         return 0
