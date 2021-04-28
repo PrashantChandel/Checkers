@@ -1,5 +1,6 @@
 from os import terminal_size
-import pygame   
+import pygame  
+import time 
 from checkers.constants import  SQUARE_SIZE, WIDTH, HEIGHT,BLACK,WHITE,WINNER,BLUE
 from checkers.board import Board
 from checkers.game import Game
@@ -58,18 +59,18 @@ class Main:
         return pause      
     def declare(self,winner):
         if winner=="blue":
-            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+100))
+            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//2+WIDTH//8))
+            pygame.display.update()
+            time.sleep(5)
+            return 1
+
         elif winner=="black":
-            self.WIN.blit(WINNER,(HEIGHT+HEIGHT//2,WIDTH//2+100))
-        if winner!=None:
-            crash=1
-            while crash>0:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        crash =0
-                pygame.display.update()
-            return 0
-        return 1
+            self.WIN.blit(WINNER,(HEIGHT//4,WIDTH//16))
+            pygame.display.update()
+            time.sleep(5)
+            return 1
+            
+        return 0
 
     def START_GAME(self, voice = True):
         if(self.ON == False):
@@ -81,7 +82,7 @@ class Main:
         while run:
             clock.tick(self.FPS)
             check=self.declare(game.board.winner())
-            if check==0:
+            if check==1:
                 run=False
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
