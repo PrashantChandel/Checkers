@@ -5,10 +5,12 @@ from checkers.constants import *
 from checkers.board import Board
 from checkers.game import Game
 
-COLOR_SIDE_MENU = (254, 191, 195)
+COLOR_SIDE_MENU = (220,220,220)
 FIRST_ROW = 700
 SECOND_ROW = 500
 THIRD_ROW = 300
+TOP_FIRST_ROW = 50
+TOP_SECOND_ROW = 150
 
 class TEXT:
     def __init__(self, show_me, color = BLACK, bg = None):
@@ -35,16 +37,16 @@ class Main:
         # blue left : b
         b = game.board.blue_left
         w = game.board.black_left
-        self.WIN.fill(COLOR_SIDE_MENU, ((800,500), (1000,800)))
-        b_l = TEXT('BLUE LEFT : ' + str(b))
-        w_l = TEXT('WHITE LEFT: ' + str(w))
-        b_l.show_text_manual(self.WIN,800, SECOND_ROW)
-        w_l.show_text_manual(self.WIN,800, FIRST_ROW)
+        self.WIN.fill(COLOR_SIDE_MENU, ((800,0), (1000,800)))
+        b_l = TEXT('BLUE LEFT : ' + str(b), ORANGE)
+        w_l = TEXT('WHITE LEFT: ' + str(w), ORANGE)
+        b_l.show_text_manual(self.WIN,805, TOP_SECOND_ROW)
+        w_l.show_text_manual(self.WIN,805, TOP_FIRST_ROW)
         if(game.board.winner() == "blue"):
-            winner = TEXT('BLUE WON !!', CYAN)
+            winner = TEXT('BLUE WON !!', ORANGE)
             winner.show_text_manual(self.WIN, 810, THIRD_ROW)
         elif(game.board.winner() == "black"):
-            winner = TEXT('BLACK WON !!', CYAN)
+            winner = TEXT('WHITE WON !!', ORANGE)
             winner.show_text_manual(self.WIN, 810, THIRD_ROW)
 
 
